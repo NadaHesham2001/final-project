@@ -8,11 +8,13 @@ import os
 import time
 from dotenv import load_dotenv
 from datetime import datetime
+from prometheus_flask_exporter import PrometheusMetrics
 
 # Load environment variables
 load_dotenv()
 
 app = Flask(__name__)
+metrics = PrometheusMetrics(app)
 CORS(app)
 
 # Swagger configuration

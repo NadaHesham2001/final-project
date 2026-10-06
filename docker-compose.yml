@@ -1,0 +1,46 @@
+services:
+  database:
+    image: postgres:15
+    container_name: task-manager-db
+    environment:
+      POSTGRES_DB: microservices_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - task-manager-network
+
+  backend:
+    build:
+      context: ./backend
+    image: task-manager-backend:dev
+    container_name: task-manager-backend
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@database:5432/microservices_db
+    ports:
+      - "5000:5000"
+    depends_on:
+      - database
+    networks:
+      - task-manager-network
+
+  frontend:
+    build:
+      context: ./frontend
+    image: task-manager-frontend:dev
+    container_name: task-manager-frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    networks:
+      - task-manager-network
+
+networks:
+  task-manager-network:
+
+volumes:
+  postgres_data:

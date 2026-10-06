@@ -1,0 +1,15 @@
+---
+- name: Test Dev Server
+  hosts: kube_control_plane
+  connection: local
+  gather_facts: true
+
+  tasks:
+    - name: Check hostname
+      ansible.builtin.command: hostname
+      register: hostname_result
+      changed_when: false
+
+    - name: Show hostname
+      ansible.builtin.debug:
+        msg: "Server hostname is {{ hostname_result.stdout }}"
